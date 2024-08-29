@@ -4,13 +4,11 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Build the code using Maven'
-                // Add your build steps here
             }
         }
         stage('Unit and Integration Test') {
             steps {
                 echo 'Run unit tests using JUnit'
-                // Add your test steps here
             }
             post {
                 always {
@@ -31,13 +29,11 @@ pipeline {
         stage('Code Analysis') {
             steps {
                 echo 'Analyze the code using SonarQube'
-                // Add your code analysis steps here
             }
         }
         stage('Security Scan') {
             steps {
                 echo 'Perform a security scan using OWASP'
-                // Add your security scan steps here
             }
             post {
                 always {
@@ -58,19 +54,16 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 echo 'Deploy to staging using AWS'
-                // Add your deployment steps here
             }
         }
         stage('Integration Test on Staging') {
             steps {
                 echo 'Run integration tests on staging environment'
-                // Add your integration test steps here
             }
         }
         stage('Deploy to Production') {
             steps {
                 echo 'Deploy the application to the production environment'
-                // Add your production deployment steps here
             }
         }
     }
