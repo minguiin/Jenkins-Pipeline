@@ -3,75 +3,46 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Build the code using Maven'
-                // Add your build steps here
-            }
+                echo "Build the code using Maven"
+                }
         }
+
         stage('Unit and Integration Test') {
             steps {
-                echo 'Run unit tests using JUnit'
-                // Add your test steps here
-            }
-            post {
-                always {
-                    script {
-                        emailext (
-                            to: 'kaiiyang52@gmail.com',
-                            subject: "Build ${currentBuild.fullDisplayName} - ${currentBuild.result}",
-                            body: """
-                                Build ${currentBuild.fullDisplayName} completed with status: ${currentBuild.result}.
-                                Check console output at ${env.BUILD_URL} for more details.
-                            """,
-                            attachLog: true
-                        )
+                echo "Run unit tests using Junit"
+                }
+                post{
+                    success{
+                        mail to: "kaiiyang52@gmail.com"
+                        subject: "Build Status Email"
+                        body: "Build was successful"
                     }
                 }
-            }
         }
         stage('Code Analysis') {
             steps {
-                echo 'Analyze the code using SonarQube'
-                // Add your code analysis steps here
-            }
+                echo "Analyze the code using SonarQube"
+                }
         }
         stage('Security Scan') {
             steps {
-                echo 'Perform a security scan using OWASP'
-                // Add your security scan steps here
-            }
-            post {
-                always {
-                    script {
-                        emailext (
-                            to: 'kaiiyang52@gmail.com',
-                            subject: "Build ${currentBuild.fullDisplayName} - ${currentBuild.result}",
-                            body: """
-                                Build ${currentBuild.fullDisplayName} completed with status: ${currentBuild.result}.
-                                Check console output at ${env.BUILD_URL} for more details.
-                            """,
-                            attachLog: true
-                        )
-                    }
+                echo "Perform a security scan using OWASP"
                 }
-            }
         }
         stage('Deploy to Staging') {
             steps {
-                echo 'Deploy to staging using AWS'
-                // Add your deployment steps here
-            }
+                echo "Deploy to staging using AWS"
+                }
         }
-        stage('Integration Test on Staging') {
+        stage('Integration test on staging') {
             steps {
-                echo 'Run integration tests on staging environment'
-                // Add your integration test steps here
-            }
+                echo "Run integration tests on staging environment"
+                }
         }
-        stage('Deploy to Production') {
+        stage('Deploy to production') {
             steps {
-                echo 'Deploy the application to the production environment'
-                // Add your production deployment steps here
-            }
+                echo "Deploy the application to the production environment"
+                }
         }
     }
 }
