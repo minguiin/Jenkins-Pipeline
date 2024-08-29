@@ -1,41 +1,86 @@
 pipeline {
     agent any
+
+    environment {
+        RECIPIENT_EMAIL = 'kaiiyang52@gmail.com'
+    }
+
     stages {
         stage('Build') {
             steps {
-                echo "Build the code using Maven tool"
-                }
+                echo "Build the code using Maven"
+                // Example: sh 'mvn clean package'
+            }
         }
 
         stage('Unit and Integration Test') {
             steps {
                 echo "Run unit tests using Junit"
+                // Example: sh 'mvn test'
+            }
+            post {
+                always {
+                    script {
+                        // Send email notification with build logs
+                        def currentBuildLog = currentBuild.rawBuild.getLog(10).join("\n")
+                        sendEmailNotification('Unit and Integration Test', currentBuild.currentResult, currentBuildLog)
+                    }
                 }
+            }
         }
+
         stage('Code Analysis') {
             steps {
                 echo "Analyze the code using SonarQube"
-                }
+                // Example: sh 'mvn sonar:sonar'
+            }
         }
+
         stage('Security Scan') {
             steps {
                 echo "Perform a security scan using OWASP"
+                // Example: sh 'dependency-check.sh --project my-app --scan ./'
+            }
+            post {
+                always {
+                    script {
+                        // Send email notification with security scan logs
+                        def currentBuildLog = currentBuild.rawBuild.getLog(10).join("\n")
+                        sendEmailNotification('Security Scan', currentBuild.currentResult, currentBuildLog)
+                    }
                 }
+            }
         }
+
         stage('Deploy to Staging') {
             steps {
                 echo "Deploy to staging using AWS"
-                }
+                // Example: sh 'aws deploy ...'
+            }
         }
+
         stage('Integration test on staging') {
             steps {
                 echo "Run integration tests on staging environment"
-                }
+                // Example: sh 'run_integration_tests.sh'
+            }
         }
+
         stage('Deploy to production') {
             steps {
                 echo "Deploy the application to the production environment"
-                }
+                // Example: sh 'ansible-playbook -i inventory/prod deploy.yml'
+            }
         }
     }
+}
+
+// Function to send email notification
+def sendEmailNotification(stageName, status, log) {
+    emailext(
+        to: "${env.RECIPIENT_EMAIL}",
+        subject: "Jenkins Pipeline: ${stageName} - ${status}",
+        body: "The ${stageName} stage has completed with status: ${status}.\n\nPlease find the logs attached.",
+        attachLog: true
+    )
 }
