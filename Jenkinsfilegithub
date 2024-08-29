@@ -3,64 +3,75 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "Build the code using Maven"
+                echo 'Build the code using Maven'
+                // Add your build steps here
             }
         }
-
         stage('Unit and Integration Test') {
             steps {
-                echo "Run unit tests using Junit"
+                echo 'Run unit tests using JUnit'
+                // Add your test steps here
             }
             post {
                 always {
                     script {
-                        // Send email notification after Unit and Integration Test stage
-                        sendNotification(currentBuild.currentResult, "Unit and Integration Test")
+                        emailext (
+                            to: 'kaiiyang52@gmail.com',
+                            subject: "Build ${currentBuild.fullDisplayName} - ${currentBuild.result}",
+                            body: """
+                                Build ${currentBuild.fullDisplayName} completed with status: ${currentBuild.result}.
+                                Check console output at ${env.BUILD_URL} for more details.
+                            """,
+                            attachLog: true
+                        )
                     }
                 }
             }
         }
         stage('Code Analysis') {
             steps {
-                echo "Analyze the code using SonarQube"
+                echo 'Analyze the code using SonarQube'
+                // Add your code analysis steps here
             }
         }
         stage('Security Scan') {
             steps {
-                echo "Perform a security scan using OWASP"
+                echo 'Perform a security scan using OWASP'
+                // Add your security scan steps here
             }
             post {
                 always {
                     script {
-                        // Send email notification after Security Scan stage
-                        sendNotification(currentBuild.currentResult, "Security Scan")
+                        emailext (
+                            to: 'kaiiyang52@gmail.com',
+                            subject: "Build ${currentBuild.fullDisplayName} - ${currentBuild.result}",
+                            body: """
+                                Build ${currentBuild.fullDisplayName} completed with status: ${currentBuild.result}.
+                                Check console output at ${env.BUILD_URL} for more details.
+                            """,
+                            attachLog: true
+                        )
                     }
                 }
             }
         }
         stage('Deploy to Staging') {
             steps {
-                echo "Deploy to staging using AWS"
+                echo 'Deploy to staging using AWS'
+                // Add your deployment steps here
             }
         }
-        stage('Integration test on staging') {
+        stage('Integration Test on Staging') {
             steps {
-                echo "Run integration tests on staging environment"
+                echo 'Run integration tests on staging environment'
+                // Add your integration test steps here
             }
         }
-        stage('Deploy to production') {
+        stage('Deploy to Production') {
             steps {
-                echo "Deploy the application to the production environment"
+                echo 'Deploy the application to the production environment'
+                // Add your production deployment steps here
             }
         }
     }
-}
-
-def sendNotification(status, stage) {
-    // Sending email to specified email address
-    emailext(
-        to: 'kaiiyang52@gmail.com',
-        subject: "Build ${status}: ${stage}",
-        body: "The ${stage} stage has ${status}. Please check the Jenkins logs for more details."
-    )
 }
