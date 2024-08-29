@@ -3,15 +3,38 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "building ..."
-                echo "help"
+                echo "Build the code using Maven"
                 }
-                post{
-                    success{
-                        mail to: "kaiiyang52@gmail.com",
-                        subject: "Build Status Email",
-                        body: "Build was successful"
-                    }
+        }
+
+        stage('Unit and Integration Test') {
+            steps {
+                echo "Run unit tests using Junit"
+                }
+        }
+        stage('Code Analysis') {
+            steps {
+                echo "Analyze the code using SonarQube"
+                }
+        }
+        stage('Security Scan') {
+            steps {
+                echo "Perform a security scan using OWASP"
+                }
+        }
+        stage('Deploy to Staging') {
+            steps {
+                echo "Deploy to staging using AWS"
+                }
+        }
+        stage('Integration test on staging') {
+            steps {
+                echo "Run integration tests on staging environment"
+                }
+        }
+        stage('Deploy to production') {
+            steps {
+                echo "Deploy the application to the production environment"
                 }
         }
     }
