@@ -58,12 +58,12 @@ pipeline {
         }
         stage('Integration Test on Staging') {
             steps {
-                echo 'Run integration tests on staging environment'
+                echo 'Run integration tests on staging environment using Selenium'
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo 'Deploy the application to the production environment'
+                echo 'Deploy the application to the production environment using AWS CodeDeploy'
             }
         }
     }
